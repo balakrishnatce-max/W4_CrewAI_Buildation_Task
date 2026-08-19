@@ -1,0 +1,531 @@
+{
+  "name": "CustomerSupportEmailAgent",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "filters": {
+          "q": "=in:inbox subject:Support",
+          "readStatus": "unread"
+        }
+      },
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -848,
+        -208
+      ],
+      "id": "fc6d57be-81e4-497d-9094-dbb149d1883b",
+      "name": "Gmail Trigger",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "TmhfCgVvihAMUBUO",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"username\": \"{{ $json.From.match(/<(.+)>/) ? $json.From.match(/<(.+)>/)[1] : $json.From }}\",\n  \"query\": \"{{ $json.snippet }}\",\n  \"subject\": \"{{ $json.Subject }}\",\n  \"received_date\": \"{{ DateTime.fromMillis(Number($json.internalDate)).setZone('Asia/Kolkata').toFormat('yyyy-MM-dd') }}\",\n  \"received_time\": \"{{ DateTime.fromMillis(Number($json.internalDate)).setZone('Asia/Kolkata').toFormat('HH:mm:ss') }}\",\n  \"message_id\": \"{{ $json.id }}\",\n  \"thread_id\": \"{{ $json.threadId }}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        -656,
+        -208
+      ],
+      "id": "8ffe2346-0133-442d-9e7a-c444af0f8232",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1K2pA0zuOT72kzYky1jBK7v6s40eFAcgLCKKnVMeZ5HY",
+          "mode": "list",
+          "cachedResultName": "CustomerDetails",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1K2pA0zuOT72kzYky1jBK7v6s40eFAcgLCKKnVMeZ5HY/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1K2pA0zuOT72kzYky1jBK7v6s40eFAcgLCKKnVMeZ5HY/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "username": "={{ $json.username }}",
+            "subject": "={{ $json.subject }}",
+            "query": "={{ $json.query }}",
+            "received_date": "={{ $json.received_date }}",
+            "received_time": "={{ $json.received_time }}",
+            "message_id": "={{ $json.message_id }}",
+            "thread_id": "={{ $json.thread_id }}",
+            "status": "Received"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "username",
+              "displayName": "username",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "subject",
+              "displayName": "subject",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "query",
+              "displayName": "query",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "received_date",
+              "displayName": "received_date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "received_time",
+              "displayName": "received_time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "message_id",
+              "displayName": "message_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "thread_id",
+              "displayName": "thread_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "confidence",
+              "displayName": "confidence",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "route",
+              "displayName": "route",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "final_answer",
+              "displayName": "final_answer",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "response_time",
+              "displayName": "response_time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -464,
+        -208
+      ],
+      "id": "6c8f0e64-a26e-4501-9d4c-040c73682894",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "gZogQWPm3xTCm2rf",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://childrens-thousand-arlington-letter.trycloudflare.com/support/query",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"username\": \"{{ $json.username }}\",\n  \"query\": \"{{ $json.query }}\"\n}",
+        "options": {
+          "timeout": 60000
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        -272,
+        -208
+      ],
+      "id": "d4ec214f-b43b-437f-a42c-235efafffcd5",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1K2pA0zuOT72kzYky1jBK7v6s40eFAcgLCKKnVMeZ5HY",
+          "mode": "list",
+          "cachedResultName": "CustomerDetails",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1K2pA0zuOT72kzYky1jBK7v6s40eFAcgLCKKnVMeZ5HY/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1K2pA0zuOT72kzYky1jBK7v6s40eFAcgLCKKnVMeZ5HY/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "response_time": "={{ $json.response_time }}",
+            "final_answer": "={{ $json.final_answer }}",
+            "route": "={{ $json.route }}",
+            "confidence": "={{ $json.confidence }}",
+            "message_id": "={{ $('Edit Fields').item.json.message_id }}",
+            "status": "={{ \"Completed\" }}",
+            "thread_id": "="
+          },
+          "matchingColumns": [
+            "message_id"
+          ],
+          "schema": [
+            {
+              "id": "username",
+              "displayName": "username",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "subject",
+              "displayName": "subject",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "query",
+              "displayName": "query",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "received_date",
+              "displayName": "received_date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "received_time",
+              "displayName": "received_time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "message_id",
+              "displayName": "message_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "thread_id",
+              "displayName": "thread_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "confidence",
+              "displayName": "confidence",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "route",
+              "displayName": "route",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "final_answer",
+              "displayName": "final_answer",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "response_time",
+              "displayName": "response_time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -96,
+        -208
+      ],
+      "id": "9eb74650-b453-4219-ae76-f7131c5ddebd",
+      "name": "Update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "gZogQWPm3xTCm2rf",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "reply",
+        "messageId": "={{ $json.message_id }}",
+        "message": "=\n{{ $('HTTP Request').item.json.final_answer }}\n",
+        "options": {
+          "senderName": "Bala"
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        96,
+        -208
+      ],
+      "id": "3fff8b33-5000-4b2f-a285-afaad6591cab",
+      "name": "Reply to a message",
+      "webhookId": "b8e4670c-dca1-4050-b7b4-1c516e6ffeb2",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "TmhfCgVvihAMUBUO",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "markAsRead",
+        "messageId": "={{ $('Edit Fields').item.json.message_id }}"
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        272,
+        -208
+      ],
+      "id": "f8b7d549-4336-4ab4-81b2-5122d5a52313",
+      "name": "Mark a message as read",
+      "webhookId": "d81563cf-a598-470d-b882-775d953f844f",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "TmhfCgVvihAMUBUO",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Gmail Trigger": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Reply to a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reply to a message": {
+      "main": [
+        [
+          {
+            "node": "Mark a message as read",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "5d484a6b-12b4-4c89-a2ae-ff22dfe777cf",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "cadbbf73b39afcab463b7d1b1d2c9af97e1fd7483885142014933cb7eeb1e244"
+  },
+  "nodeGroups": [],
+  "id": "aO5TOuIbcexbDIRq",
+  "tags": []
+}
